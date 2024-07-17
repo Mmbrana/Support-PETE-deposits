@@ -1,0 +1,104 @@
+function accessNewSpreadsheet() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Custom Menu')
+    .addItem('Access Source 1', 'accessSource1')
+    .addItem('Access Source 2', 'accessSource2')
+    .addItem('Access Source 3', 'accessSource3')
+    .addToUi();
+  
+  grantAccess2();
+  getCurrentUserEmail();
+  dollarconversionpaste();
+  gotofillup();
+
+}
+
+function accessSource1() {
+  var destinationSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sourceSpreadsheetId = "1y4OHaZ9Y8rrvYqaotmP5uANt_eoqz-pkku2QC-Ri7aQ"; // Replace with your source spreadsheet ID
+  var sourceSpreadsheet = SpreadsheetApp.openById(sourceSpreadsheetId);
+  var sourceSheet = sourceSpreadsheet.getSheetByName("Account Handle"); // Replace with the sheet name in the source spreadsheet
+
+  // Get data from the source spreadsheet
+  var data = sourceSheet.getDataRange().getValues();
+
+  // Copy data to the destination spreadsheet
+  var destinationSheet = destinationSpreadsheet.getSheetByName("Reference - Preselling"); // Replace with the sheet name in the destination spreadsheet
+  destinationSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+}
+
+// Similar functions for accessSource2 and accessSource3
+function accessSource2() {
+  var destinationSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sourceSpreadsheetId = "1iXYOQCxdngNzaCQp5P90mCaGX8_vem1su1yKJakmmwM"; // Replace with your source spreadsheet ID
+  var sourceSpreadsheet = SpreadsheetApp.openById(sourceSpreadsheetId);
+  var sourceSheet = sourceSpreadsheet.getSheetByName("Account Handle"); // Replace with the sheet name in the source spreadsheet
+
+  // Get data from the source spreadsheet
+  var data = sourceSheet.getDataRange().getValues();
+
+  // Copy data to the destination spreadsheet
+  var destinationSheet = destinationSpreadsheet.getSheetByName("Reference - Turnover"); // Replace with the sheet name in the destination spreadsheet
+  destinationSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+}
+
+function accessSource3() {
+  var destinationSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sourceSpreadsheetId = "1mkURDVQWi_vi54rvNZcGSzl9rPrO8egzBrTDfPLuZcA"; // Replace with your source spreadsheet ID
+  var sourceSpreadsheet = SpreadsheetApp.openById(sourceSpreadsheetId);
+  var sourceSheet = sourceSpreadsheet.getSheetByName("Account Handle"); // Replace with the sheet name in the source spreadsheet
+
+  // Get data from the source spreadsheet
+  var data = sourceSheet.getDataRange().getValues();
+
+  // Copy data to the destination spreadsheet
+  var destinationSheet = destinationSpreadsheet.getSheetByName("Reference - RFO"); // Replace with the sheet name in the destination spreadsheet
+  destinationSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+}
+
+function gotofillup() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  spreadsheet.getRange('B2').activate();
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Fill-up'), true);
+  
+  var landingPageSheet = spreadsheet.getSheetByName('Landing Page');
+  if (landingPageSheet !== null) {
+    landingPageSheet.hideSheet();
+  }
+};
+
+function getCurrentUserEmail() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Email Data");
+  const userEmail = Session.getActiveUser().getEmail();
+  sheet.getRange("T2").setValue(userEmail);
+
+  const sheet2 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Email Data Dollar");
+  const userEmail2 = Session.getActiveUser().getEmail();
+  sheet2.getRange("T2").setValue(userEmail2);
+
+  const sheet3 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Email Data Rental");
+  const userEmail3 = Session.getActiveUser().getEmail();
+  sheet3.getRange("T2").setValue(userEmail3);
+}
+
+function dollarconversionpaste() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sourceSheet = ss.getSheetByName("Fill-up Dollar");
+  var value = sourceSheet.getRange("H12").getValue();
+  
+  // Paste the value as values in the same cell
+  var destinationRange = sourceSheet.getRange("H12");
+  destinationRange.setValue(value);
+}
+
+function grantAccess2() {
+  var sourceUrl = 'https://docs.google.com/spreadsheets/d/15n0RtdcpNPv7IuuuejeoZlv2ZcZgzG0Gw_kuSxll--E/edit#gid=160277178';
+  var sourceSheet = SpreadsheetApp.openByUrl(sourceUrl);
+  var sourceRange = sourceSheet.getSheetByName('Version Identifier').getRange('B1:C1'); // Adjust the range as needed
+
+  var destinationSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('How to maintain this file'); // Adjust the sheet name as needed
+  var destinationRange = destinationSheet.getRange('B1:C1'); // Adjust the range as needed
+
+  var values = sourceRange.getValues();
+  destinationRange.setValues(values);
+}
